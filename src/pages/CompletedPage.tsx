@@ -1,0 +1,12 @@
+import { ArrowRight, Check, Download, ExternalLink, ShieldCheck } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Button, PageHeader, StatusBadge, TransactionStepper, VendorMark } from '../components/ui'
+import { Timeline } from '../components/Timeline'
+import { transactionTimeline } from '../data/mockData'
+import { usePrototype } from '../context/usePrototype'
+
+export function CompletedPage() {
+  const { selectedVendor, showToast } = usePrototype()
+  const navigate = useNavigate()
+  return <div><PageHeader eyebrow="Verified transaction" title="Goal completed" description="Your transaction has been successfully completed and verified." /><TransactionStepper current={5} /><section className="completion-hero"><div className="completion-check"><Check size={30} /></div><div><h2>Your goal is in motion.</h2><p>Payment has been verified with PayPal and your vendor order is confirmed.</p></div><StatusBadge status="Completed" /></section><div className="completion-grid"><section><div className="completed-order"><div className="completed-vendor"><VendorMark vendor={selectedVendor} large /><div><span className="eyebrow">Order placed with</span><h2>{selectedVendor.name}</h2><p>30 Conference Kits</p></div></div><div className="completion-metrics"><div><strong>${selectedVendor.amount}</strong><span>Paid</span></div><div><strong>{selectedVendor.deliveryDays} days</strong><span>Delivery</span></div><div><strong>${500 - selectedVendor.amount}</strong><span>Saved</span></div></div><div className="verification-row"><ShieldCheck size={18} /><div><strong>Payment verified</strong><span>PAYMENT.CAPTURE.COMPLETED received from PayPal</span></div></div></div><div className="id-card"><div><span>PayPal Transaction ID</span><strong>6KT23510M421</strong></div><div><span>PACT Order ID</span><strong>PACT-1048</strong></div><button className="text-button" onClick={() => showToast('Transaction IDs copied to clipboard.')}>Copy IDs</button></div><div className="completion-actions"><Button onClick={() => navigate('/new')}>Start new transaction <ArrowRight size={16} /></Button><Button tone="secondary" onClick={() => navigate('/transactions/PACT-1048')}>View transaction <ExternalLink size={15} /></Button><Button tone="quiet" onClick={() => showToast('Receipt download prepared.')}> <Download size={15} /> Download receipt</Button></div></section><aside className="timeline-card"><span className="eyebrow">Verified workflow</span><h2>Transaction timeline</h2><Timeline events={transactionTimeline} activeLast /></aside></div></div>
+}

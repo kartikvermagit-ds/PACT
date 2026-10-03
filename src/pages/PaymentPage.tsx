@@ -1,0 +1,14 @@
+import { ArrowLeft, Check, LockKeyhole, ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button, PageHeader, SandboxBadge, TransactionStepper, VendorMark } from '../components/ui'
+import { paymentService } from '../services/paymentService'
+import { usePrototype } from '../context/usePrototype'
+
+export function PaymentPage() {
+  const { selectedVendor, showToast } = usePrototype()
+  const [state, setState] = useState<'ready' | 'processing' | 'received'>('ready')
+  const navigate = useNavigate()
+  const pay = async () => { setState('processing'); await paymentService.createPayPalOrder(); const result = await paymentService.capturePayPalOrder(); setState('received'); showToast(`PayPal capture ${result.captureId} verified.`); window.setTimeout(() => navigate('/completed'), 750) }
+  return <div><PageHeader eyebrow="Secure checkout" title="PayPal payment" description="Authorize the order in your PayPal Sandbox environment." /><TransactionStepper current={4} /><div className="payment-layout"><section className="checkout-card"><div className="paypal-top"><div className="paypal-lock"><LockKeyhole size={18} /></div><div><strong>PayPal Sandbox</strong><span>Secure checkout</span></div><SandboxBadge /></div><div className="checkout-merchant"><span>Paying PACT order</span><strong>PACT AI Commerce Agent</strong><small>Order ID: ORDER-9RX58231</small></div><div className="checkout-order"><div><VendorMark vendor={selectedVendor} large /><div><strong>{selectedVendor.name}</strong><span>30 Conference Kits</span></div></div><strong>${selectedVendor.amount}.00</strong></div><div className="checkout-total"><span>Total</span><strong>${selectedVendor.amount}<small>.00 USD</small></strong></div>{state === 'received' ? <div className="payment-received"><span><Check size={18} /></span><div><strong>Payment received</strong><small>Verifying the PayPal event…</small></div></div> : <Button tone="paypal" className="checkout-button" onClick={pay} disabled={state === 'processing'}>{state === 'processing' ? <><i className="spinner" /> Processing payment…</> : <>Continue with <b>PayPal</b></>}</Button>}<div className="secure-row"><ShieldCheck size={15} /> Your payment is securely handled by PayPal. PACT never stores payment credentials.</div></section><aside className="payment-side"><div><span className="eyebrow">Before you continue</span><h2>You’re approving this prepared transaction.</h2><p>Once authorized in PayPal Sandbox, PACT waits for a verified payment event before marking your goal complete.</p></div><dl><div><dt>Vendor</dt><dd>{selectedVendor.name}</dd></div><div><dt>Delivery</dt><dd>{selectedVendor.deliveryDays} days</dd></div><div><dt>Environment</dt><dd><SandboxBadge compact /></dd></div></dl><button className="back-plan" onClick={() => navigate('/review')}><ArrowLeft size={15} /> Back to review</button></aside></div></div>
+}
