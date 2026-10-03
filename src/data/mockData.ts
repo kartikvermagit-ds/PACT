@@ -32,3 +32,69 @@ export const transactions: Transaction[] = [
 export const transactionTimeline = [
   ['Request received', '10:02 AM'], ['Requirements parsed', '10:02 AM'], ['Vendors analyzed', '10:03 AM'], ['Best option selected', '10:04 AM'], ['PayPal order created', '10:05 AM'], ['Payment approved', '10:06 AM'], ['Webhook received', '10:06 AM'], ['Goal completed', '10:06 AM'],
 ]
+
+export const goalTemplates = [
+  {
+    id: 'conf-kits',
+    title: 'Conference Kits',
+    goal: 'I need 30 conference kits under $500 within 5 days.',
+    category: 'Corporate kits',
+    estimatedBudget: 500,
+    deadlineDays: 5,
+    itemCount: 30,
+  },
+  {
+    id: 'team-swag',
+    title: 'Team Offsite Swag',
+    goal: 'I need 25 custom branded hoodies and tumblers under $650 within 7 days.',
+    category: 'Branded merchandise',
+    estimatedBudget: 650,
+    deadlineDays: 7,
+    itemCount: 25,
+  },
+  {
+    id: 'new-hire',
+    title: 'New Hire Onboarding',
+    goal: 'I need 10 premium desk starter boxes under $350 within 3 days.',
+    category: 'Corporate kits',
+    estimatedBudget: 350,
+    deadlineDays: 3,
+    itemCount: 10,
+  },
+  {
+    id: 'event-badges',
+    title: 'Event Badges & Lanyards',
+    goal: 'I need 100 recycled conference badges and lanyards under $250 within 4 days.',
+    category: 'Event supplies',
+    estimatedBudget: 250,
+    deadlineDays: 4,
+    itemCount: 100,
+  },
+]
+
+export const initialNotifications = [
+  {
+    id: 'notif-1',
+    title: 'Payment Verified',
+    time: '2m ago',
+    read: false,
+    type: 'payment' as const,
+    description: 'PayPal webhook PAYMENT.CAPTURE.COMPLETED verified for order ORDER-9RX58231.',
+  },
+  {
+    id: 'notif-2',
+    title: 'Recommendation Ready',
+    time: '12m ago',
+    read: false,
+    type: 'agent' as const,
+    description: 'PACT evaluated 3 vendors for "30 conference kits" and recommended OfficeKart.',
+  },
+  {
+    id: 'notif-3',
+    title: 'Sandbox Mode Active',
+    time: '1h ago',
+    read: true,
+    type: 'system' as const,
+    description: 'PayPal Sandbox environment is operational with simulated webhook delivery.',
+  },
+]

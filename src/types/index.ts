@@ -48,3 +48,31 @@ export interface PaymentResult {
   captureId: string
   status: 'COMPLETED' | 'PENDING'
 }
+
+export type ToastType = 'info' | 'success' | 'warning' | 'error'
+
+export interface ToastNotification {
+  id: string
+  message: string
+  type: ToastType
+  duration?: number
+}
+
+export interface NotificationItem {
+  id: string
+  title: string
+  time: string
+  read: boolean
+  type: 'agent' | 'payment' | 'system'
+  description: string
+}
+
+export interface GoalTemplate {
+  id: string
+  title: string
+  goal: string
+  category: string
+  estimatedBudget: number
+  deadlineDays: number
+  itemCount: number
+}
