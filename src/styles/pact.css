@@ -469,3 +469,220 @@ input, textarea, select { color: var(--text); }
 .template-goal { font-size: 11px; color: #b4bcc8; line-height: 1.45; margin: 0; flex: 1; }
 .template-meta { display: flex; gap: 12px; font-size: 10px; color: var(--faint); }
 .nav-link-button { width: 100%; border: 0; text-align: left; cursor: pointer; }
+
+/* ==========================================================================
+   PACT FINTECH UI 2.0 ? LUXURY ART DIRECTION & INTERACTION ELEVATION
+   ========================================================================== */
+
+/* Universal Smoothing & Polish */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  background-color: #07090e;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 106, 0, 0.08), transparent 70%),
+    radial-gradient(circle at 100% 100%, rgba(0, 112, 186, 0.05), transparent 50%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(255, 106, 0, 0.35);
+  color: #ffffff;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #090c12;
+}
+::-webkit-scrollbar-thumb {
+  background: #242936;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff6a00;
+}
+
+/* Elevated Glowing Buttons */
+.button {
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.button-primary {
+  background: linear-gradient(135deg, #ff7a1a 0%, #ff5500 100%) !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 18px -2px rgba(255, 106, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.35) inset !important;
+  border: 1px solid rgba(255, 138, 48, 0.5) !important;
+}
+
+.button-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ff8c33 0%, #ff6600 100%) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 25px 0 rgba(255, 106, 0, 0.65), 0 1px 0 rgba(255, 255, 255, 0.5) inset !important;
+}
+
+.button-primary:active:not(:disabled) {
+  transform: translateY(0px) !important;
+  box-shadow: 0 2px 10px rgba(255, 106, 0, 0.4) !important;
+}
+
+.button-paypal {
+  background: linear-gradient(135deg, #0070ba 0%, #004b87 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 18px -2px rgba(0, 112, 186, 0.5), 0 1px 0 rgba(255, 255, 255, 0.25) inset !important;
+  border: 1px solid rgba(0, 150, 240, 0.35) !important;
+}
+
+.button-paypal:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0585d8 0%, #005a9e 100%) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 26px 0 rgba(0, 112, 186, 0.7) !important;
+}
+
+.button-secondary {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+  color: #f0f0f0 !important;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  transform: translateY(-1.5px) !important;
+}
+
+/* Glassmorphic Surfaces & Border Luminance */
+.goal-form-panel,
+.decision-card,
+.vendor-card,
+.detail-card,
+.side-detail-card,
+.settings-ref-card,
+.completed-order,
+.timeline-card,
+.id-card,
+.feature-grid article,
+.promise-card {
+  background: rgba(15, 18, 26, 0.72) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 14px 38px -10px rgba(0, 0, 0, 0.55) !important;
+  border-radius: 14px !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease !important;
+}
+
+.vendor-card:hover,
+.feature-grid article:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(255, 106, 0, 0.32) !important;
+  box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.7), 0 0 20px -8px rgba(255, 106, 0, 0.2) !important;
+}
+
+/* Ergonomic Sticky Sidebars */
+.goal-summary-card,
+.planning-aside,
+.decision-card,
+.detail-side {
+  position: sticky !important;
+  top: 92px !important;
+  align-self: start !important;
+}
+
+/* Modern Input Focus Rings */
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  background: rgba(11, 14, 20, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 9px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #ff6a00 !important;
+  box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.22) !important;
+  background: rgba(16, 20, 30, 0.95) !important;
+  outline: none !important;
+}
+
+/* Live Pulse Radar for Verified Status */
+.status-verified,
+.status-pill-green,
+.sandbox-badge {
+  position: relative;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(34, 197, 94, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+.status-badge.status-completed,
+.status-badge.status-verified {
+  animation: pulse-ring 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Stepper Modernization */
+.stepper-step.active .stepper-circle {
+  background: linear-gradient(135deg, #ff7a1a 0%, #ff5500 100%) !important;
+  color: #000 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 16px rgba(255, 106, 0, 0.6) !important;
+}
+
+.stepper-step.completed .stepper-circle {
+  background: #10b981 !important;
+  color: #000 !important;
+}
+
+/* Hero Section Enhancements */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-photo-overlay {
+  background: linear-gradient(to bottom, rgba(7, 9, 14, 0.5) 0%, rgba(7, 9, 14, 0.95) 85%, #07090e 100%) !important;
+}
+
+.hero-badge {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(10px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.hero-badge span {
+  color: #f3f4f6 !important;
+}
+
+/* Brand Mark Glow */
+.brand-mark {
+  background: linear-gradient(135deg, #ff8c33 0%, #ff5500 100%) !important;
+  box-shadow: 0 2px 10px rgba(255, 106, 0, 0.45) !important;
+}

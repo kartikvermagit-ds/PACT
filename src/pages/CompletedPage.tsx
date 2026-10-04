@@ -1,12 +1,153 @@
-import { ArrowRight, Check, Download, ExternalLink, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Check, CheckCircle2, Copy, ExternalLink, ShieldCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, PageHeader, StatusBadge, TransactionStepper, VendorMark } from '../components/ui'
-import { Timeline } from '../components/Timeline'
-import { transactionTimeline } from '../data/mockData'
+import { Button, PageHeader, StatusBadge, TransactionStepper } from '../components/ui'
 import { usePrototype } from '../context/usePrototype'
 
+const completionSteps = [
+  'Goal created',
+  'Requirements analyzed',
+  'Option selected',
+  'User approved',
+  'PayPal order created',
+  'Payment captured',
+  'Payment verified',
+  'Goal completed',
+]
+
 export function CompletedPage() {
-  const { selectedVendor, showToast } = usePrototype()
+  const { selectedVendor, parsedRequirements, showToast } = usePrototype()
   const navigate = useNavigate()
-  return <div><PageHeader eyebrow="Verified transaction" title="Goal completed" description="Your transaction has been successfully completed and verified." /><TransactionStepper current={5} /><section className="completion-hero"><div className="completion-check"><Check size={30} /></div><div><h2>Your goal is in motion.</h2><p>Payment has been verified with PayPal and your vendor order is confirmed.</p></div><StatusBadge status="Completed" /></section><div className="completion-grid"><section><div className="completed-order"><div className="completed-vendor"><VendorMark vendor={selectedVendor} large /><div><span className="eyebrow">Order placed with</span><h2>{selectedVendor.name}</h2><p>30 Conference Kits</p></div></div><div className="completion-metrics"><div><strong>${selectedVendor.amount}</strong><span>Paid</span></div><div><strong>{selectedVendor.deliveryDays} days</strong><span>Delivery</span></div><div><strong>${500 - selectedVendor.amount}</strong><span>Saved</span></div></div><div className="verification-row"><ShieldCheck size={18} /><div><strong>Payment verified</strong><span>PAYMENT.CAPTURE.COMPLETED received from PayPal</span></div></div></div><div className="id-card"><div><span>PayPal Transaction ID</span><strong>6KT23510M421</strong></div><div><span>PACT Order ID</span><strong>PACT-1048</strong></div><button className="text-button" onClick={() => showToast('Transaction IDs copied to clipboard.')}>Copy IDs</button></div><div className="completion-actions"><Button onClick={() => navigate('/new')}>Start new transaction <ArrowRight size={16} /></Button><Button tone="secondary" onClick={() => navigate('/transactions/PACT-1048')}>View transaction <ExternalLink size={15} /></Button><Button tone="quiet" onClick={() => showToast('Receipt download prepared.')}> <Download size={15} /> Download receipt</Button></div></section><aside className="timeline-card"><span className="eyebrow">Verified workflow</span><h2>Transaction timeline</h2><Timeline events={transactionTimeline} activeLast /></aside></div></div>
+
+  const [orderId, setOrderId] = useState('ORDER-9RX58231')
+  const [captureId, setCaptureId] = useState('6KT23510M421')
+
+  useEffect(() => {
+    const savedOrderId = localStorage.getItem('pact_last_order_id')
+    const savedCaptureId = localStorage.getItem('pact_last_capture_id')
+    if (savedOrderId) setOrderId(savedOrderId)
+    if (savedCaptureId) setCaptureId(savedCaptureId)
+  }, [])
+
+  const budgetCeiling = parsedRequirements.budget || 500
+  const savings = Math.max(0, budgetCeiling - selectedVendor.amount)
+  const quantity = parsedRequirements.quantity || 30
+  const item = parsedRequirements.item || 'Conference Kit'
+
+  const copyTransactionIds = () => {
+    const text = `PayPal Order ID: ${orderId}\nPayPal Capture ID: ${captureId}\nAmount: $${selectedVendor.amount}.00 USD\nSupplier: ${selectedVendor.name}`
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).catch(() => {})
+    }
+    showToast('Transaction IDs copied to clipboard.', 'success')
+  }
+
+  return (
+    <div className="completed-page">
+      <PageHeader
+        eyebrow="Step 5 of 5"
+        title="Payment Verified"
+        description="Your transaction is verified on the PayPal Sandbox ledger and recorded in the audit trail."
+        action={<StatusBadge status="Completed" />}
+      />
+
+      <TransactionStepper current={5} />
+
+      <div className="completion-layout">
+        {/* Main Settlement Details */}
+        <section className="completion-summary-card">
+          <div className="completion-verified-hero">
+            <div className="verified-badge-icon">
+              <CheckCircle2 size={32} />
+            </div>
+            <div>
+              <span className="eyebrow">Settlement Confirmed</span>
+              <h2>Goal completed successfully</h2>
+              <p>
+                Payment for {quantity}x {item} has been captured by PayPal Sandbox. Supplier{' '}
+                <strong>{selectedVendor.name}</strong> has confirmed order placement.
+              </p>
+            </div>
+          </div>
+
+          {/* Key Metrics Row */}
+          <div className="completion-stat-grid">
+            <div>
+              <small>Amount Paid</small>
+              <strong>${selectedVendor.amount}.00 USD</strong>
+            </div>
+            <div>
+              <small>Est. Delivery</small>
+              <strong>{selectedVendor.deliveryDays} business days</strong>
+            </div>
+            <div>
+              <small>Budget Saved</small>
+              <strong className="savings-val">${savings}.00 USD</strong>
+            </div>
+            <div>
+              <small>Payment Status</small>
+              <span className="status-pill status-pill-green">COMPLETED</span>
+            </div>
+          </div>
+
+          {/* Transparent Identifiers Box */}
+          <div className="completion-id-box">
+            <div>
+              <span>PayPal Order ID</span>
+              <strong className="mono-text">{orderId}</strong>
+            </div>
+            <div>
+              <span>PayPal Capture ID</span>
+              <strong className="mono-text">{captureId}</strong>
+            </div>
+            <button type="button" className="text-button" onClick={copyTransactionIds}>
+              <Copy size={13} /> Copy IDs
+            </button>
+          </div>
+
+          {/* Action Row */}
+          <div className="completion-actions-row">
+            <Button
+              tone="primary"
+              size="md"
+              onClick={() => navigate(`/transactions/${orderId}`)}
+              iconRight={<ExternalLink size={15} />}
+            >
+              View transaction record
+            </Button>
+            <Button
+              tone="secondary"
+              size="md"
+              onClick={() => navigate('/new')}
+              iconRight={<ArrowRight size={15} />}
+            >
+              Start another transaction
+            </Button>
+          </div>
+        </section>
+
+        {/* 8-Step Complete Verification Timeline */}
+        <aside className="completion-timeline-panel">
+          <div className="timeline-panel-head">
+            <ShieldCheck size={18} />
+            <div>
+              <h3>Audit Lifecycle</h3>
+              <small>End-to-End Execution Sequence</small>
+            </div>
+          </div>
+
+          <ol className="audit-step-list">
+            {completionSteps.map((stepName) => (
+              <li key={stepName} className="audit-step-item completed">
+                <span className="step-check">
+                  <Check size={12} strokeWidth={3} />
+                </span>
+                <span className="step-name">{stepName}</span>
+              </li>
+            ))}
+          </ol>
+        </aside>
+      </div>
+    </div>
+  )
 }

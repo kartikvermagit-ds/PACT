@@ -1,0 +1,86 @@
+[
+  {
+    "id": "vendor_a",
+    "vendor_name": "Conference Supply Co.",
+    "item": "conference kits",
+    "quantity": 30,
+    "price": 430,
+    "currency": "USD",
+    "delivery_days": 6,
+    "rating": 4.7,
+    "verified": true,
+    "description": "Standard business kit manufacturer with bulk packing capacity."
+  },
+  {
+    "id": "vendor_b",
+    "vendor_name": "EventPro Supplies",
+    "item": "conference kits",
+    "quantity": 30,
+    "price": 465,
+    "currency": "USD",
+    "delivery_days": 4,
+    "rating": 4.9,
+    "verified": true,
+    "description": "Premier event supplier featuring rapid courier delivery."
+  },
+  {
+    "id": "vendor_c",
+    "vendor_name": "Rapid Events",
+    "item": "conference kits",
+    "quantity": 30,
+    "price": 520,
+    "currency": "USD",
+    "delivery_days": 3,
+    "rating": 4.8,
+    "verified": true,
+    "description": "Express turnaround provider for mission-critical deadlines."
+  },
+  {
+    "id": "vendor-officekart",
+    "vendor_name": "OfficeKart Direct",
+    "item": "conference kits",
+    "quantity": 30,
+    "price": 465,
+    "currency": "USD",
+    "delivery_days": 4,
+    "rating": 4.9,
+    "verified": true,
+    "description": "Verified commercial merchant specializing in certified conference kits."
+  },
+  {
+    "id": "vendor-swaghub",
+    "vendor_name": "SwagHub Enterprise",
+    "item": "Team Swag & Apparel",
+    "quantity": 50,
+    "price": 720,
+    "currency": "USD",
+    "delivery_days": 7,
+    "rating": 4.8,
+    "verified": true,
+    "description": "Custom branded apparel, premium hoodies, and executive gift bundles."
+  },
+  {
+    "id": "vendor-fastkit",
+    "vendor_name": "FastKit Logistics",
+    "item": "New Hire Starter Pack",
+    "quantity": 25,
+    "price": 380,
+    "currency": "USD",
+    "delivery_days": 3,
+    "rating": 4.7,
+    "verified": true,
+    "description": "Pre-packaged employee onboarding kits with express delivery."
+  },
+  {
+    "id": "vendor-ecomerch",
+    "vendor_name": "EcoMerch Global",
+    "item": "Eco-Friendly Event Bags",
+    "quantity": 100,
+    "price": 410,
+    "currency": "USD",
+    "delivery_days": 5,
+    "rating": 4.9,
+    "verified": true,
+    "description": "100% biodegradable event collateral and sustainable packaging."
+  }
+]

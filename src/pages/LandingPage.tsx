@@ -1,27 +1,264 @@
-import { ArrowRight, Box, BriefcaseBusiness, Check, CircleDollarSign, Clock3, LaptopMinimal, Menu, Shirt, ShieldCheck, Sparkles, X } from 'lucide-react'
+import {
+  ArrowRight,
+  Box,
+  BriefcaseBusiness,
+  CheckCircle2,
+  CircleDollarSign,
+  Clock3,
+  Layers,
+  Menu,
+  ShieldCheck,
+  Shirt,
+  X,
+} from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Brand, Button, SandboxBadge } from '../components/ui'
 import { usePrototype } from '../context/usePrototype'
 import heroWorkspace from '../assets/pact-hero-workspace.png'
 
-const examples = [
+const sampleGoals = [
   { label: '30 conference kits under $500 within 5 days', icon: Box },
-  { label: '10 custom t-shirts for my team', icon: Shirt },
-  { label: 'Office supplies under $300', icon: BriefcaseBusiness },
-  { label: 'Design services for my project', icon: LaptopMinimal },
+  { label: '25 custom polo shirts under $400 in 7 days', icon: Shirt },
+  { label: 'Ergonomic office supplies under $300 in 3 days', icon: BriefcaseBusiness },
 ]
 
 export function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { goal, setGoal } = usePrototype()
   const navigate = useNavigate()
-  const start = () => navigate('/new')
-  return <div className="landing"><header className="landing-nav"><Link to="/"><Brand /></Link><nav className={mobileOpen ? 'open' : ''}><a className="active-link" href="#top" onClick={() => setMobileOpen(false)}>Home</a><a href="#how-it-works" onClick={() => setMobileOpen(false)}>How it works</a><a href="#use-cases" onClick={() => setMobileOpen(false)}>Use cases</a><a href="#features" onClick={() => setMobileOpen(false)}>Features</a><a href="#pricing" onClick={() => setMobileOpen(false)}>Pricing</a><Link to="/transactions" onClick={() => setMobileOpen(false)}>Sign in</Link><Button onClick={start}>Get started <ArrowRight size={16} /></Button></nav><button className="landing-menu" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">{mobileOpen ? <X /> : <Menu />}</button></header>
-    <section className="hero-section hero-photo" id="top"><img className="hero-photo-bg" src={heroWorkspace} alt="Warm workspace with a laptop showing an abstract commerce dashboard" /><div className="hero-photo-overlay" /><div className="hero-copy"><div className="hero-badge"><Sparkles size={14} /> AI + PayPal <i /> <span>Turn your intent into a verified transaction</span></div><h1>Describe what you want to <em>accomplish.</em><br />PACT handles the rest.</h1><p className="hero-description">An AI agent that understands your goal, finds the best options, prepares the transaction, and completes a verified payment with PayPal.</p><div className="goal-prompt"><label htmlFor="hero-goal"><Sparkles size={15} /> What do you want to accomplish?</label><div><input id="hero-goal" value={goal} onChange={(event) => setGoal(event.target.value)} /><Button onClick={start}>Start a transaction <ArrowRight size={16} /></Button></div></div><div className="example-goals"><span>Try an example:</span><div>{examples.map(({ label, icon: Icon }) => <button key={label} onClick={() => setGoal(label)}><Icon size={20} /><span>{label}</span></button>)}</div></div></div></section>
-    <section className="landing-section how-section" id="how-it-works"><div className="section-intro"><h2>How <em>PACT</em> works</h2><p>From your goal to a verified PayPal transaction — in a few simple steps.</p></div><div className="work-steps">{[['01', 'Describe your goal', 'Tell us what you want to accomplish.', Sparkles], ['02', 'Agent plans', 'PACT evaluates options and prepares the transaction.', Clock3], ['03', 'Your approval', 'Review the plan and authorize the payment.', ShieldCheck], ['04', 'PayPal payment', 'Complete a secure transaction with PayPal.', CircleDollarSign], ['05', 'Goal completed', 'Get a verified transaction and real-time updates.', Check]].map(([number, title, text, Icon]) => <article key={number as string}><span>{number as string}</span><Icon size={19} /><h3>{title as string}</h3><p>{text as string}</p></article>)}</div></section>
-    <section className="landing-section product-promise" id="features"><div className="promise-card"><div><span className="eyebrow">Not a payment button</span><h2>Commercial decisions, with a human in control.</h2><p>PACT combines structured AI decision-making with PayPal’s trusted payment infrastructure to complete your commercial objectives.</p><div className="promise-points"><span><Check size={15} /> AI recommends</span><span><Check size={15} /> You authorize</span><span><Check size={15} /> PACT verifies</span></div></div><div className="promise-graphic"><div className="process-chip">Your goal</div><i /><div className="process-chip">PACT plan</div><i /><div className="process-chip active">Your approval</div><i /><div className="process-chip">Verified payment</div></div></div><div className="feature-grid" id="use-cases"><article><Sparkles /><h3>AI-powered decisions</h3><p>Every recommendation is explained using price, delivery, rating, and your requirements.</p></article><article><span className="paypal-mark">P</span><h3>Trusted by PayPal</h3><p>Prepare secure payments in PayPal Sandbox today, with a clear path to production.</p></article><article><Check /><h3>End-to-end workflow</h3><p>From a natural-language request to payment verification, all in one flow.</p></article><article><ShieldCheck /><h3>You stay in control</h3><p>PACT never completes a payment until you give explicit authorization.</p></article></div></section>
-    <section className="landing-cta" id="pricing"><SandboxBadge /><h2>Make your next purchase decision<br /><em>with more certainty.</em></h2><Button onClick={start}>Start a transaction <ArrowRight size={16} /></Button></section>
-    <footer className="landing-footer"><Brand /><span>© 2026 PACT. AI recommends. You authorize.</span><div><a href="#features">Privacy</a><a href="#features">Terms</a></div></footer>
-  </div>
+
+  const handleStart = (customGoal?: string) => {
+    if (customGoal) {
+      setGoal(customGoal)
+    }
+    navigate('/new')
+  }
+
+  return (
+    <div className="landing">
+      {/* Navigation */}
+      <header className="landing-nav">
+        <Link to="/">
+          <Brand />
+        </Link>
+        <nav className={mobileOpen ? 'open' : ''}>
+          <a href="#how-it-works" onClick={() => setMobileOpen(false)}>
+            How it works
+          </a>
+          <a href="#example" onClick={() => setMobileOpen(false)}>
+            Workflow Example
+          </a>
+          <Link to="/offers" onClick={() => setMobileOpen(false)}>
+            Available Offers
+          </Link>
+          <Link to="/transactions" onClick={() => setMobileOpen(false)}>
+            Transactions
+          </Link>
+          <Button onClick={() => handleStart()} tone="primary" size="sm">
+            Start a transaction <ArrowRight size={15} />
+          </Button>
+        </nav>
+        <button
+          className="landing-menu"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X /> : <Menu />}
+        </button>
+      </header>
+
+      {/* Hero Section */}
+      <section className="hero-section hero-photo" id="top">
+        <img
+          className="hero-photo-bg"
+          src={heroWorkspace}
+          alt="Fintech commerce workstation"
+        />
+        <div className="hero-photo-overlay" />
+        <div className="hero-copy">
+          <div className="hero-badge">
+            <ShieldCheck size={14} /> PayPal Agentic Commerce Transactions
+          </div>
+
+          <h1>
+            Describe what you want to <em>accomplish.</em>
+          </h1>
+
+          <p className="hero-description">
+            PACT turns your commercial goal into a reviewed, verified PayPal transaction.
+            Autonomous constraint validation with mandatory human approval.
+          </p>
+
+          {/* Goal Input Workspace */}
+          <div className="goal-prompt">
+            <label htmlFor="hero-goal">What do you want to accomplish?</label>
+            <div>
+              <input
+                id="hero-goal"
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+                placeholder="e.g. 30 conference kits under $500 within 5 days..."
+              />
+              <Button onClick={() => handleStart(goal)} tone="primary">
+                Start a transaction <ArrowRight size={16} />
+              </Button>
+            </div>
+          </div>
+
+          {/* Example Triggers */}
+          <div className="example-goals">
+            <span>Try a realistic objective:</span>
+            <div>
+              {sampleGoals.map(({ label, icon: Icon }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => {
+                    setGoal(label)
+                    handleStart(label)
+                  }}
+                >
+                  <Icon size={16} />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works Section */}
+      <section className="landing-section how-section" id="how-it-works">
+        <div className="section-intro">
+          <span className="eyebrow">Transaction Architecture</span>
+          <h2>How PACT works</h2>
+          <p>A deterministic, human-governed transaction pipeline built on PayPal infrastructure.</p>
+        </div>
+
+        <div className="work-steps">
+          {[
+            ['01', 'Describe', 'State your purchasing goal and constraints in plain English.', Layers],
+            ['02', 'PACT plans', 'Extracts requirements and scores available offers against hard limits.', Clock3],
+            ['03', 'You approve', 'Review transparent recommendation and authorize payment explicitly.', ShieldCheck],
+            ['04', 'PayPal processes', 'Executes payment securely through PayPal Sandbox Orders v2 API.', CircleDollarSign],
+            ['05', 'PACT verifies', 'Server-verified capture and cryptographic audit timeline generated.', CheckCircle2],
+          ].map(([number, title, text, Icon]) => (
+            <article key={number as string}>
+              <span className="step-num">{number as string}</span>
+              <Icon size={20} className="step-icon" />
+              <h3>{title as string}</h3>
+              <p>{text as string}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Realistic Case Study Section */}
+      <section className="landing-section product-promise" id="example">
+        <div className="section-intro">
+          <span className="eyebrow">Real-World Case Study</span>
+          <h2>A complete goal-to-transaction example</h2>
+          <p>See how PACT evaluates commercial constraints before asking for your consent.</p>
+        </div>
+
+        <div className="example-case-card">
+          <div className="case-header">
+            <div>
+              <span className="eyebrow">User Objective</span>
+              <h3>"I need 30 conference kits under $500 within 5 days."</h3>
+            </div>
+            <span className="status-pill status-pill-green">Verified Transaction</span>
+          </div>
+
+          <div className="case-matrix">
+            <div className="case-col">
+              <h4>1. Extracted Constraints</h4>
+              <dl>
+                <div>
+                  <dt>Item Category</dt>
+                  <dd>Conference Kit</dd>
+                </div>
+                <div>
+                  <dt>Target Quantity</dt>
+                  <dd>30 units</dd>
+                </div>
+                <div>
+                  <dt>Budget Ceiling</dt>
+                  <dd>$500.00 USD</dd>
+                </div>
+                <div>
+                  <dt>Max Delivery Window</dt>
+                  <dd>5 business days</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="case-col">
+              <h4>2. Evaluated Offers</h4>
+              <ul className="case-evaluation-list">
+                <li className="disqualified">
+                  <strong>Option A ($430.00)</strong>
+                  <span>6 days delivery ? ? Misses 5-day deadline</span>
+                </li>
+                <li className="qualified">
+                  <strong>Option B ($465.00) ? RECOMMENDED</strong>
+                  <span>4 days delivery ? ? $35 under budget ? ? Meets deadline</span>
+                </li>
+                <li className="disqualified">
+                  <strong>Option C ($520.00)</strong>
+                  <span>3 days delivery ? ? Exceeds $500 budget</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="case-col">
+              <h4>3. Verified Settlement</h4>
+              <dl>
+                <div>
+                  <dt>Selected Supplier</dt>
+                  <dd>OfficeKart (Option B)</dd>
+                </div>
+                <div>
+                  <dt>Authorized Total</dt>
+                  <dd>$465.00 USD</dd>
+                </div>
+                <div>
+                  <dt>PayPal Order ID</dt>
+                  <dd>ORDER-9RX58231</dd>
+                </div>
+                <div>
+                  <dt>Payment Capture ID</dt>
+                  <dd>6KT23510M421 (COMPLETED)</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="landing-cta" id="start">
+        <SandboxBadge />
+        <h2>
+          Ready to turn intent into a verified transaction?
+        </h2>
+        <p>No fake counters. No unapproved charges. Real PayPal Sandbox execution.</p>
+        <Button onClick={() => handleStart()} tone="primary" size="lg">
+          Start a transaction <ArrowRight size={17} />
+        </Button>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <Brand />
+        <span>? 2026 PACT ? PayPal Agentic Commerce Transactions ? Sandbox Prototype</span>
+        <div>
+          <Link to="/offers">Available Offers</Link>
+          <Link to="/transactions">Transactions</Link>
+          <Link to="/settings">Settings</Link>
+        </div>
+      </footer>
+    </div>
+  )
 }

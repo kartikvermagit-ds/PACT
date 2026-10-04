@@ -10,8 +10,7 @@ import { ReviewPage } from './pages/ReviewPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { TransactionDetailsPage } from './pages/TransactionDetailsPage'
 import { TransactionsPage } from './pages/TransactionsPage'
-import { VendorDetailsPage } from './pages/VendorDetailsPage'
-import { VendorsPage } from './pages/VendorsPage'
+import { OffersPage } from './pages/OffersPage'
 import { ScrollToTop } from './components/ScrollToTop'
 import './App.css'
 
@@ -30,8 +29,8 @@ function App() {
             <Route path="/completed" element={<CompletedPage />} />
             <Route path="/transactions" element={<TransactionsPage />} />
             <Route path="/transactions/:transactionId" element={<TransactionDetailsPage />} />
-            <Route path="/vendors" element={<VendorsPage />} />
-            <Route path="/vendors/:vendorId" element={<VendorDetailsPage />} />
+            <Route path="/offers" element={<OffersPage />} />
+            <Route path="/vendors" element={<Navigate to="/offers" replace />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

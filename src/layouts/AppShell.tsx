@@ -3,15 +3,13 @@ import {
   Bell,
   CheckCheck,
   CreditCard,
-  ExternalLink,
-  Info,
+    Info,
   LayoutTemplate,
   Menu,
   Plus,
   Search,
   Settings,
-  ShieldCheck,
-  Store,
+    Store,
   X,
 } from 'lucide-react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -22,7 +20,7 @@ import { goalTemplates } from '../data/mockData'
 const navItems = [
   { to: '/new', label: 'New transaction', icon: Plus },
   { to: '/transactions', label: 'Transactions', icon: CreditCard },
-  { to: '/vendors', label: 'Vendors', icon: Store },
+  { to: '/offers', label: 'Available offers', icon: Store },
   { to: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -51,12 +49,12 @@ export function AppShell() {
   // Dynamic search placeholder
   const searchPlaceholder =
     pathname.startsWith('/transactions')
-      ? 'Search transactions, vendors, amounts...'
-      : pathname.startsWith('/vendors')
-      ? 'Search verified vendors, categories...'
+      ? 'Search transactions, order IDs...'
+      : pathname.startsWith('/offers')
+      ? 'Search prototype offers...'
       : pathname === '/settings'
-      ? 'Search settings, security, AI controls...'
-      : 'Search transactions, vendors, items...'
+      ? 'Search configuration...'
+      : 'Search transactions, order IDs...'
 
   // Close notifications dropdown on click outside
   useEffect(() => {
@@ -68,6 +66,7 @@ export function AppShell() {
         setNotificationsOpen(false)
       }
     }
+
     if (notificationsOpen) {
       document.addEventListener('mousedown', handleClickOutside)
     }
@@ -81,9 +80,9 @@ export function AppShell() {
     e.preventDefault()
     if (!searchQuery.trim()) return
 
-    if (!pathname.startsWith('/transactions') && !pathname.startsWith('/vendors')) {
+    if (!pathname.startsWith('/transactions')) {
       navigate('/transactions')
-      showToast(`Filtering for: "${searchQuery}"`, 'info')
+      showToast(`Filtering transactions for: "${searchQuery}"`, 'info')
     }
   }
 
@@ -128,27 +127,24 @@ export function AppShell() {
             }}
           >
             <LayoutTemplate size={18} />
-            <span>Goal Templates</span>
+            <span>Sample Goals</span>
           </button>
         </nav>
 
         <div className="sidebar-bottom">
-          <div className="credits">
-            <div>
-              <span>Agent Credits</span>
-              <strong>12 / 20</strong>
+          <div className="sidebar-sandbox-box">
+            <div className="sandbox-header-row">
+              <span className="sandbox-live-dot" />
+              <strong>PayPal Sandbox</strong>
             </div>
-            <div className="credit-track" role="progressbar" aria-valuenow={60} aria-valuemin={0} aria-valuemax={100}>
-              <i style={{ width: '60%' }} />
-            </div>
-            <small>8 automated evaluations remaining</small>
+            <p>Orders v2 API ? Real Sandbox</p>
           </div>
 
           <div className="sidebar-user">
             <span className="avatar">K</span>
             <div className="sidebar-user-info">
               <strong>Kartik Verma</strong>
-              <SandboxBadge compact />
+              <small>Demo Operator</small>
             </div>
           </div>
         </div>
@@ -194,7 +190,7 @@ export function AppShell() {
                   className="search-clear"
                   aria-label="Clear search"
                 >
-                  <X size={13} />
+                  <X size={14} />
                 </button>
               )}
             </form>
@@ -203,27 +199,25 @@ export function AppShell() {
           <div className="topbar-right">
             <SandboxBadge />
 
-            {/* Notifications Menu */}
-            <div className="notifications-wrap" ref={notificationsRef}>
+            {/* Notification Dropdown */}
+            <div className="notification-wrapper" ref={notificationsRef}>
               <button
                 type="button"
-                className={`icon-button ${unreadNotificationsCount > 0 ? 'has-badge' : ''}`}
-                onClick={() => setNotificationsOpen((prev) => !prev)}
-                aria-label={`Notifications (${unreadNotificationsCount} unread)`}
+                className="icon-button notification-trigger"
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                aria-label="View system notifications"
                 aria-expanded={notificationsOpen}
               >
                 <Bell size={18} />
-                {unreadNotificationsCount > 0 && <span className="notification-dot" />}
+                {unreadNotificationsCount > 0 && <i className="notification-dot" />}
               </button>
 
               {notificationsOpen && (
-                <div className="notifications-popover" role="dialog" aria-label="Notifications panel">
-                  <div className="notifications-header">
+                <div className="notification-dropdown" role="region" aria-label="System Alerts">
+                  <div className="notification-header">
                     <div>
-                      <strong>Notifications</strong>
-                      {unreadNotificationsCount > 0 && (
-                        <span className="unread-count">{unreadNotificationsCount} unread</span>
-                      )}
+                      <strong>System Activity</strong>
+                      <span className="count-tag">{unreadNotificationsCount} unread</span>
                     </div>
                     {unreadNotificationsCount > 0 && (
                       <button
@@ -231,37 +225,30 @@ export function AppShell() {
                         className="mark-all-read"
                         onClick={markAllNotificationsRead}
                       >
-                        <CheckCheck size={13} /> Mark all read
+                        <CheckCheck size={14} /> Mark all read
                       </button>
                     )}
                   </div>
 
-                  <div className="notifications-list">
+                  <div className="notification-list">
                     {notifications.length === 0 ? (
-                      <div className="notifications-empty">No notifications</div>
+                      <div className="empty-notifications">
+                        <Info size={20} />
+                        <p>No recent activity</p>
+                      </div>
                     ) : (
-                      notifications.map((notif) => (
+                      notifications.map((n) => (
                         <div
-                          key={notif.id}
-                          className={`notification-item ${notif.read ? 'read' : 'unread'}`}
-                          onClick={() => markNotificationRead(notif.id)}
+                          key={n.id}
+                          className={`notification-item ${!n.read ? 'unread' : ''}`}
+                          onClick={() => markNotificationRead(n.id)}
                         >
-                          <div className="notification-item-icon">
-                            {notif.type === 'payment' ? (
-                              <ShieldCheck size={15} />
-                            ) : notif.type === 'agent' ? (
-                              <Plus size={15} />
-                            ) : (
-                              <Info size={15} />
-                            )}
+                          <div className="notification-item-head">
+                            <span className={`status-bullet ${n.type}`} />
+                            <strong>{n.title}</strong>
+                            <small>{n.time}</small>
                           </div>
-                          <div className="notification-item-body">
-                            <div className="notification-title-row">
-                              <strong>{notif.title}</strong>
-                              <span className="notification-time">{notif.time}</span>
-                            </div>
-                            <p>{notif.description}</p>
-                          </div>
+                          <p>{n.description}</p>
                         </div>
                       ))
                     )}
@@ -270,63 +257,53 @@ export function AppShell() {
               )}
             </div>
 
-            {/* Profile Chip */}
-            <button
-              type="button"
-              className="top-user"
-              onClick={() => navigate('/settings')}
-              title="Account settings"
+            <Button
+              tone="primary"
+              size="sm"
+              iconLeft={<Plus size={15} />}
+              onClick={() => navigate('/new')}
             >
-              <span className="avatar">K</span>
-              <span className="user-name">Kartik Verma</span>
-            </button>
+              New Transaction
+            </Button>
           </div>
         </header>
 
-        {/* Dynamic Route Content */}
-        <main className="app-content">
+        {/* Dynamic Page Content */}
+        <main className="page-content" id="main-content">
           <Outlet />
         </main>
       </div>
 
-      {/* Global Toast Stack */}
+      {/* Global Toast Container */}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
-      {/* Goal Templates Modal */}
+      {/* Goal Template Selector Modal */}
       <Modal
         isOpen={isTemplateModalOpen}
         onClose={() => setTemplateModalOpen(false)}
-        eyebrow="Quick Setup"
-        title="Start from a Goal Template"
-        description="Select a pre-configured procurement scenario to test the PACT AI commerce agent workflow."
-        size="lg"
+        title="Select a Procurement Objective"
+        description="Choose a realistic commercial scenario to test PACT's intent extraction, constraint checking, and PayPal payment flow."
       >
-        <div className="template-grid">
+        <div className="template-modal-list">
           {goalTemplates.map((template) => (
-            <div key={template.id} className="template-card">
+            <div
+              key={template.id}
+              className="template-card"
+              onClick={() => {
+                applyTemplate(template.id)
+                navigate('/new')
+              }}
+            >
               <div className="template-card-header">
-                <div>
-                  <span className="eyebrow">{template.category}</span>
-                  <h3>{template.title}</h3>
-                </div>
-                <strong className="template-budget">${template.estimatedBudget}</strong>
+                <span className="template-category">{template.category}</span>
+                <span className="template-budget">Target: ${template.estimatedBudget}</span>
               </div>
-              <p className="template-goal">{template.goal}</p>
-              <div className="template-meta">
-                <span>{template.itemCount} items</span>
-                <span>Within {template.deadlineDays} days</span>
+              <h3>{template.title}</h3>
+              <p>{template.goal}</p>
+              <div className="template-card-meta">
+                <span>? Required: {template.deadlineDays} Days</span>
+                <span>?? Units: {template.itemCount}</span>
               </div>
-              <Button
-                tone="secondary"
-                size="sm"
-                fullWidth
-                onClick={() => {
-                  applyTemplate(template.id)
-                  navigate('/new')
-                }}
-              >
-                Use this template <ExternalLink size={13} />
-              </Button>
             </div>
           ))}
         </div>

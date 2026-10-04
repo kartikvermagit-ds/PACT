@@ -1,24 +1,259 @@
-import { ArrowLeft, Check, CircleDollarSign, Copy, ExternalLink, PackageCheck, ShieldCheck, Sparkles, Truck } from 'lucide-react'
-import { useState } from 'react'
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Copy,
+  CreditCard,
+  FileText,
+  Package,
+  ShieldCheck,
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { PageHeader, StatusBadge, Tabs } from '../components/ui'
-import { Timeline } from '../components/Timeline'
-import { transactionTimeline, vendors } from '../data/mockData'
+import { PageHeader, StatusBadge } from '../components/ui'
+import { vendors } from '../data/mockData'
 import { usePrototype } from '../context/usePrototype'
+import { apiClient } from '../services/apiClient'
 
-const detailTabs = ['Overview', 'AI Analysis', 'Payment Details', 'Vendor Details', 'Items', 'Logs & Webhooks']
-
-export function TransactionDetailsPage() {
-  const [active, setActive] = useState('Overview')
-  const { transactionId = 'PACT-1048' } = useParams()
-  const { selectedVendor, showToast } = usePrototype()
-  const navigate = useNavigate()
-  const vendor = selectedVendor.id === 'officekart' ? selectedVendor : vendors[1]
-  return <div><button className="crumb-button" onClick={() => navigate('/transactions')}><ArrowLeft size={15} /> Transactions</button><PageHeader eyebrow={transactionId} title="Transaction details" description="A complete record of PACT’s recommendation, your approval, and payment verification." action={<StatusBadge status="Completed" />} /><Tabs items={detailTabs} active={active} onChange={setActive} />{active === 'Overview' && <div className="details-layout"><section><div className="detail-overview-grid"><div className="detail-highlight"><span><Sparkles size={16} /></span><small>Original goal</small><strong>30 conference kits under $500 within 5 days</strong></div><div className="detail-stat"><CircleDollarSign size={16} /><span>Total paid</span><strong>$465.00</strong></div><div className="detail-stat"><Truck size={16} /><span>Delivery</span><strong>4 days</strong></div><div className="detail-stat"><Check size={16} /><span>Status</span><strong>Completed</strong></div></div><section className="detail-card"><div className="card-heading"><div><span className="eyebrow">Full audit trail</span><h2>Transaction timeline</h2></div><StatusBadge status="Verified" /></div><Timeline events={transactionTimeline} activeLast /></section><section className="detail-card ai-analysis-preview"><div className="card-heading"><div><span className="eyebrow">Decision record</span><h2>AI agent’s analysis</h2></div><button className="text-button" onClick={() => setActive('AI Analysis')}>View analysis <ExternalLink size={14} /></button></div><p>OfficeKart was selected because it satisfies every hard requirement while offering the strongest combined score for price, delivery speed, verified rating, and shipping.</p><div className="analysis-tags"><span>Budget: $500</span><span>Deadline: 5 days</span><span>Quantity: 30</span><span>Rating: 4.8</span></div></section></section><aside className="detail-side"><section className="side-detail-card"><span className="eyebrow">PayPal transaction</span><h2>Payment verified</h2><div className="payment-status"><ShieldCheck size={18} /><div><strong>PAYMENT.CAPTURE.COMPLETED</strong><span>Received Oct 03, 10:06 AM</span></div></div><dl><div><dt>Order ID</dt><dd>ORDER-9RX58231 <button onClick={() => showToast('Order ID copied.')}><Copy size={13} /></button></dd></div><div><dt>Capture ID</dt><dd>6KT23510M421 <button onClick={() => showToast('Capture ID copied.')}><Copy size={13} /></button></dd></div><div><dt>Environment</dt><dd>Sandbox</dd></div></dl></section><section className="side-detail-card"><span className="eyebrow">Items ordered</span><div className="order-side-item"><PackageCheck size={19} /><div><strong>Conference Kit</strong><span>30 units × $15.50</span></div><b>$465</b></div><div className="breakdown"><span>Items subtotal <b>$465.00</b></span><span>Shipping <b>Free</b></span><span>Total <strong>$465.00</strong></span></div></section></aside></div>}{active === 'AI Analysis' && <AnalysisTab vendorName={vendor.name} />}{active === 'Payment Details' && <PaymentTab />}{active === 'Vendor Details' && <VendorTab vendorName={vendor.name} />}{active === 'Items' && <ItemsTab />}{active === 'Logs & Webhooks' && <WebhookTab />}</div>
+interface AuditEvent {
+  time: string
+  event: string
+  detail: string
+  status: string
 }
 
-function AnalysisTab({ vendorName }: { vendorName: string }) { return <div className="wide-detail-card"><span className="eyebrow">Structured decision</span><h2>How PACT made this recommendation</h2><div className="analysis-detail-grid"><div><h3>Parsed requirements</h3><dl><dt>Item</dt><dd>Conference Kit</dd><dt>Quantity</dt><dd>30</dd><dt>Budget</dt><dd>$500 total</dd><dt>Deadline</dt><dd>Within 5 days</dd></dl></div><div><h3>Compared options</h3><p><b>EventEssentials</b> — $520 · 6 days · 4.6 rating</p><p><b>{vendorName}</b> — $465 · 4 days · 4.8 rating</p><p><b>CorporateHub</b> — $480 · 3 days · 4.5 rating</p></div><div className="decision-callout"><Sparkles size={18} /><strong>Decision reasoning</strong><p>{vendorName} provides the highest validated fit after applying policy checks for budget, deadline, quantity, and vendor verification.</p></div></div></div> }
-function PaymentTab() { return <div className="wide-detail-card"><span className="eyebrow">Payment details</span><h2>PayPal Sandbox capture</h2><div className="payment-detail-table"><span>PayPal order</span><strong>ORDER-9RX58231</strong><span>Capture ID</span><strong>6KT23510M421</strong><span>Captured amount</span><strong>$465.00 USD</strong><span>Event state</span><strong>COMPLETED</strong></div></div> }
-function VendorTab({ vendorName }: { vendorName: string }) { return <div className="wide-detail-card"><span className="eyebrow">Fulfillment partner</span><h2>{vendorName}</h2><p className="wide-copy">Verified vendor · 4.8 rating · Free shipping · 4-day delivery. This vendor was chosen after structured criteria and policy validation.</p></div> }
-function ItemsTab() { return <div className="wide-detail-card"><span className="eyebrow">Order contents</span><h2>30 conference kits</h2><div className="items-tab-row"><PackageCheck size={20} /><div><strong>Standard conference kit with essentials</strong><span>Quantity 30 · $15.50 each</span></div><b>$465.00</b></div></div> }
-function WebhookTab() { return <div className="wide-detail-card webhook-card"><span className="eyebrow">Verification event</span><h2>PAYMENT.CAPTURE.COMPLETED</h2><p>Received from PayPal Sandbox and verified against PACT order ORDER-9RX58231.</p><pre>{'{\n  "event_type": "PAYMENT.CAPTURE.COMPLETED",\n  "resource": { "status": "COMPLETED", "amount": "465.00 USD" }\n}'}</pre></div> }
+const defaultAuditEvents: AuditEvent[] = [
+  { time: '10:32:10 AM', event: 'Goal submitted', detail: 'Natural language procurement request received by PACT', status: 'Completed' },
+  { time: '10:32:11 AM', event: 'Requirements extracted', detail: 'Item: Conference Kit, Qty: 30, Budget: $500, Max: 5 days', status: 'Completed' },
+  { time: '10:32:12 AM', event: 'Offers evaluated', detail: 'Checked catalog offers against hard budget and timeline constraints', status: 'Completed' },
+  { time: '10:32:14 AM', event: 'Option selected', detail: 'OfficeKart chosen ($465.00, 4 days) ? $35 under budget ceiling', status: 'Completed' },
+  { time: '10:34:02 AM', event: 'Human approval granted', detail: 'User explicitly authorized transaction creation', status: 'Completed' },
+  { time: '10:34:05 AM', event: 'PayPal order created', detail: 'Orders v2 API generated sandbox intent with payee escrow', status: 'Completed' },
+  { time: '10:34:48 AM', event: 'Payment captured', detail: 'Buyer approved authorization captured on PayPal Sandbox ledger', status: 'Completed' },
+  { time: '10:34:49 AM', event: 'Payment verified', detail: 'PAYMENT.CAPTURE.COMPLETED payload confirmed from PayPal', status: 'Completed' },
+]
+
+export function TransactionDetailsPage() {
+  const { transactionId = 'ORDER-9RX58231' } = useParams()
+  const { selectedVendor, parsedRequirements, showToast } = usePrototype()
+  const navigate = useNavigate()
+
+  const [orderId, setOrderId] = useState(transactionId)
+  const [captureId, setCaptureId] = useState('6KT23510M421')
+  const [backendTx, setBackendTx] = useState<any>(null)
+
+  useEffect(() => {
+    const savedOrderId = localStorage.getItem('pact_last_order_id')
+    const savedCaptureId = localStorage.getItem('pact_last_capture_id')
+
+    if (savedOrderId && (transactionId === savedOrderId || transactionId.startsWith('ORDER-'))) {
+      setOrderId(savedOrderId)
+    }
+    if (savedCaptureId) {
+      setCaptureId(savedCaptureId)
+    }
+
+    apiClient
+      .getTransaction(transactionId)
+      .then((tx: any) => setBackendTx(tx))
+      .catch(() => {})
+  }, [transactionId])
+
+  const vendor = selectedVendor.id ? selectedVendor : vendors[1]
+  const amount = backendTx?.amount || vendor.amount || 465
+  const quantity = parsedRequirements.quantity || 30
+  const item = parsedRequirements.item || 'Conference Kit'
+
+  const copyToClipboard = (text: string, label: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).catch(() => {})
+    }
+    showToast(`${label} copied to clipboard.`, 'success')
+  }
+
+  return (
+    <div className="transaction-detail-page">
+      <button
+        type="button"
+        className="crumb-button"
+        onClick={() => navigate('/transactions')}
+      >
+        <ArrowLeft size={15} /> Back to Transactions
+      </button>
+
+      <PageHeader
+        eyebrow={`Transaction Record: ${orderId}`}
+        title="Transaction Details & Audit Record"
+        description="A complete, transparent record of requirement parsing, constraint evaluation, user authorization, and PayPal Sandbox settlement."
+        action={<StatusBadge status="Completed" />}
+      />
+
+      <div className="detail-sections-grid">
+        {/* SECTION 1: GOAL */}
+        <section className="detail-card">
+          <div className="card-heading">
+            <div>
+              <span className="eyebrow">1. Commercial Objective</span>
+              <h2>User Goal</h2>
+            </div>
+            <FileText size={18} className="card-head-icon" />
+          </div>
+
+          <div className="detail-quote-box">
+            <strong>"{quantity} {item}s under ${parsedRequirements.budget || 500} within 5 days"</strong>
+          </div>
+
+          <dl className="spec-table">
+            <div>
+              <dt>Target Item</dt>
+              <dd>{item}</dd>
+            </div>
+            <div>
+              <dt>Required Quantity</dt>
+              <dd>{quantity} units</dd>
+            </div>
+            <div>
+              <dt>Budget Ceiling</dt>
+              <dd>${parsedRequirements.budget || 500}.00 USD</dd>
+            </div>
+            <div>
+              <dt>Required Deadline</dt>
+              <dd>Within 5 business days</dd>
+            </div>
+          </dl>
+        </section>
+
+        {/* SECTION 2: DECISION */}
+        <section className="detail-card">
+          <div className="card-heading">
+            <div>
+              <span className="eyebrow">2. Offer Selection</span>
+              <h2>Decision Rationale</h2>
+            </div>
+            <Package size={18} className="card-head-icon" />
+          </div>
+
+          <div className="decision-vendor-highlight">
+            <div>
+              <small>Selected Provider</small>
+              <h3>{vendor.name}</h3>
+            </div>
+            <span className="status-pill status-pill-green">Policy Qualified</span>
+          </div>
+
+          <p className="detail-copy">
+            {vendor.name} was selected because it is within the ${parsedRequirements.budget || 500}{' '}
+            budget ceiling and complies with the 5-day delivery deadline. Disqualified options failed
+            on either budget ceiling or delivery turnaround.
+          </p>
+
+          <div className="decision-check-list">
+            <span>? Verified within budget (${amount}.00 vs ${parsedRequirements.budget || 500})</span>
+            <span>? Fulfills within {vendor.deliveryDays} business days</span>
+            <span>? {vendor.shipping} Included</span>
+          </div>
+        </section>
+
+        {/* SECTION 3: PAYMENT */}
+        <section className="detail-card">
+          <div className="card-heading">
+            <div>
+              <span className="eyebrow">3. Financial Settlement</span>
+              <h2>PayPal Details</h2>
+            </div>
+            <CreditCard size={18} className="card-head-icon" />
+          </div>
+
+          <div className="payment-kv-grid">
+            <div>
+              <small>Authorized Amount</small>
+              <strong>${amount}.00 USD</strong>
+            </div>
+            <div>
+              <small>Payment Gateway</small>
+              <strong>PayPal Sandbox (Orders v2)</strong>
+            </div>
+            <div>
+              <small>PayPal Order ID</small>
+              <span className="mono-code">
+                {orderId}{' '}
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(orderId, 'Order ID')}
+                  aria-label="Copy order ID"
+                >
+                  <Copy size={12} />
+                </button>
+              </span>
+            </div>
+            <div>
+              <small>PayPal Capture ID</small>
+              <span className="mono-code">
+                {captureId}{' '}
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(captureId, 'Capture ID')}
+                  aria-label="Copy capture ID"
+                >
+                  <Copy size={12} />
+                </button>
+              </span>
+            </div>
+          </div>
+
+          <div className="verification-pill-box">
+            <ShieldCheck size={16} />
+            <span>PAYMENT.CAPTURE.COMPLETED payload confirmed from PayPal</span>
+          </div>
+        </section>
+
+        {/* SECTION 4: AUDIT TIMELINE */}
+        <section className="detail-card full-width-card">
+          <div className="card-heading">
+            <div>
+              <span className="eyebrow">4. Cryptographic Provenance</span>
+              <h2>Audit Timeline</h2>
+            </div>
+            <CheckCircle2 size={18} className="card-head-icon" />
+          </div>
+
+          <div className="transaction-table-wrap">
+            <table className="transaction-table timeline-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Lifecycle Event</th>
+                  <th>Description</th>
+                  <th>Verification Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {defaultAuditEvents.map((evt) => (
+                  <tr key={evt.event}>
+                    <td>
+                      <small className="mono-text">{evt.time}</small>
+                    </td>
+                    <td>
+                      <strong>{evt.event}</strong>
+                    </td>
+                    <td>
+                      <span>
+                        {evt.event === 'PayPal order created'
+                          ? `PayPal order ${orderId} generated with sandbox intent`
+                          : evt.event === 'Payment captured'
+                          ? `Capture ID ${captureId} verified by server webhook`
+                          : evt.detail}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="status-pill status-pill-green">Verified</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  )
+}

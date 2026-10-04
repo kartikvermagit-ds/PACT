@@ -26,7 +26,7 @@ export const transactions: Transaction[] = [
   { id: 'PACT-1047', goal: 'Team welcome boxes for 12', vendorId: 'thekitstore', amount: 384, status: 'Processing', delivery: '3 days', date: 'Oct 02, 2026' },
   { id: 'PACT-1046', goal: 'Custom t-shirts for offsite', vendorId: 'printverse', amount: 612, status: 'Pending', delivery: '7 days', date: 'Oct 01, 2026' },
   { id: 'PACT-1045', goal: 'New hire desk essentials', vendorId: 'corporatehub', amount: 286, status: 'Completed', delivery: '2 days', date: 'Sep 28, 2026' },
-  { id: 'PACT-1044', goal: 'Executive thank-you gifts', vendorId: 'giftworld', amount: 720, status: 'Failed', delivery: '—', date: 'Sep 25, 2026' },
+  { id: 'PACT-1044', goal: 'Executive thank-you gifts', vendorId: 'giftworld', amount: 720, status: 'Failed', delivery: '?', date: 'Sep 25, 2026' },
 ]
 
 export const transactionTimeline = [
